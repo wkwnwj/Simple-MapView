@@ -13,10 +13,22 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var myMapView: MKMapView!
     
-    
+    var foodStoreNames = ["늘해랑","아딸","번개반점","왕짜장","토마토도시락","홍콩반점"]
+    var foodStoreAddress = ["부산시 진구 양정동","부산시 진구 양정동","부산시 진구 양정동","부산시 진구 양정동","부산시 진구 양정동","부산시 진구 양정동"]
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        for item in foodStoreAddress{
+            let geoCoder = CLGeocoder()
+            geoCoder.geocodeAddressString(item){
+                (placemarks:[CLPlacemark]?, error: Error?) -> Void in
+                if let myError = error{
+                    print(myError)
+                    return
+                }
+            }
+        }
         // Do any additional setup after loading the view, typically from a nib.
         
         // 35.167809, 129.070544
