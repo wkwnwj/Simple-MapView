@@ -1,48 +1,68 @@
 //
 //  ViewController.swift
-//  Simple MapView
+//  Simple MapViewer 01
 //
-//  Created by D7703_22 on 2018. 6. 7..
-//  Copyright © 2018년 D7703_22. All rights reserved.
+//  Created by D7703_16 on 2018. 6. 7..
+//  Copyright © 2018년 201412402. All rights reserved.
 //
 
 import UIKit
 import MapKit
 
 class ViewController: UIViewController {
-
+    
     @IBOutlet weak var myMapView: MKMapView!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Do any additional setup after loading the view, typically from a nib.
         
-        // 위도, 경도 설정
-        //DIT 부산광역시 부산진구 양정동 42-19
-        //35.165999, 129.072543
-        let loc = CLLocationCoordinate2D(latitude: 35.165999, longitude: 129.072543)
+        // 35.167809, 129.070544
+        // 번개반점 : 부산광역시 부산진구 양정동 418-282
+        //        let location = CLLocationCoordinate2D(latitude: 35.167809, longitude: 129.070544)
+        //        let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+        //        let region = MKCoordinateRegion(center: location, span: span)
+        //        myMapView.setRegion(region, animated: true)
+        //        /////
+        //
+        //        let annotation = MKPointAnnotation()
+        //        annotation.coordinate = location
+        //        annotation.title = "반개반점"
+        //        annotation.subtitle = "TEL: 051-860-1234"
+        //        myMapView.addAnnotation(annotation)
         
-        //반경(zoom in, zoom out)
-        let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-       
-        //region 객체
-        let region = MKCoordinateRegion(center: loc, span: span)
+        /////
+        let addr = "부산광역시 부산진구 양정동 418-282"
+        let geoCoder = CLGeocoder()
         
-        myMapView.setRegion(region, animated: true)
-        
-        // annotation 꼽기
-        let anno = MKPointAnnotation()
-        anno.coordinate = loc
-        anno.title = "DIT동의과학대학교"
-        anno.subtitle = "내 꿈이 자라나는 곳"
-        myMapView.addAnnotation(anno)
+        geoCoder.geocodeAddressString(addr) {
+            (placemarks: [CLPlacemark]?, error: Error?) -> Void in
+            if let error = error {
+                print(error)
+                return
+            }
+            if let placemarks = placemarks {
+                let placemark = placemarks[0]
+                
+                
+                let loc = placemark.location?.coordinate
+                let span = MKCoordinateSpan(latitudeDelta: 0.09, longitudeDelta: 0.05)
+                
+                //                let region = MKCoordinateRegionMake(loc!, span)
+                //                let region = MKCoordinateRegionMakeWithDistance(loc!, 0.05, 0.05)
+                let region = MKCoordinateRegion(center: loc!, span: span)
+                self.myMapView.setRegion(region, animated: true)
+                
+                // annoation
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = loc!
+                annotation.title = addr
+                annotation.subtitle = "번개반점"
+                self.myMapView.addAnnotation(annotation)
+                
+            }
+        }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
 }
-
